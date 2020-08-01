@@ -1,6 +1,5 @@
 package com.pantala.todo.users;
 
-import com.pantala.todo.users.dto.CreateOneUserDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,17 +20,7 @@ public class UsersController {
     }
 
     @PostMapping
-    ResponseEntity<User> createOne(@Valid @RequestBody() CreateOneUserDto dto) {
-        User user = new User();
-        user.setUsername(dto.username);
-        user.setPassword(dto.password);
-
-        try {
-            return new ResponseEntity<>(this.service.createOne(user), HttpStatus.CREATED);
-        }
-        catch (ConflictUserException exception) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
+    ResponseEntity<User> createOne(@Valid @RequestBody User user) throws UserConflictException {
+        return new ResponseEntity<>(this.service.createOne(user), HttpStatus.CREATED);
     }
 }

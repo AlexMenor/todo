@@ -1,30 +1,43 @@
 package com.pantala.todo.users;
 
+import com.pantala.todo.exceptions.ConflictException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.validation.Valid;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UsersService {
     private final UsersRepository repository;
+    private final PasswordEncoder encoder;
 
-    public UsersService(UsersRepository repository){
+
+    public UsersService(UsersRepository repository, PasswordEncoder encoder){
         this.repository = repository;
+        this.encoder = encoder;
     }
 
-    public User createOne(User user) throws ConflictUserException{
+    public User createOne(User user) throws UserConflictException {
         try {
+            String encryptedPassword = this.encoder.encode(user.getPassword());
+            user.setPassword(encryptedPassword);
+
+            user.setId(UUID.randomUUID());
+
             return this.repository.save(user);
         }
         catch(Exception exception){
-           throw new ConflictUserException();
+           throw new UserConflictException(user.getEmail());
         }
     }
 }
 
-class ConflictUserException extends Exception{
-    ConflictUserException(){
-        super("Ya existe un usuario con este nombre de usuario");
+class UserConflictException extends ConflictException{
+    UserConflictException(String email){
+        super(String.format("An user with email %s already exists", email));
     }
-
 }
+

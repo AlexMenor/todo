@@ -7,11 +7,14 @@ import org.springframework.beans.factory.InjectionPoint;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-@SpringBootApplication
+@SpringBootApplication(exclude = SecurityAutoConfiguration.class)
 public class TodoApplication {
 
 	public static void main(String[] args) {
@@ -32,5 +35,10 @@ public class TodoApplication {
 	@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 	public Logger logger(InjectionPoint injectionPoint){
 		return LoggerFactory.getLogger(injectionPoint.getMethodParameter().getContainingClass());
+	}
+
+	@Bean()
+	public PasswordEncoder encoder (){
+		return new BCryptPasswordEncoder();
 	}
 }
