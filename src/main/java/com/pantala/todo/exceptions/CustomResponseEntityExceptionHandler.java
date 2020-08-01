@@ -27,9 +27,16 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
         return new ResponseEntity<>(new ExceptionResponse(ex.getMessage(), ex.getDetails()), HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(UnauthorizedException.class)
+    public final ResponseEntity<Object> handleUnauthenticatedException(UnauthorizedException ex, WebRequest request){
+        return new ResponseEntity<>(new ExceptionResponse(ex.getMessage(), ex.getDetails()), HttpStatus.UNAUTHORIZED);
+    }
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         List<String> validationErrors = ex.getBindingResult().getFieldErrors().stream().map(f -> String.format("%s %s",f.getField(),f.getDefaultMessage())).collect(Collectors.toList());
         return new ResponseEntity<>(new ExceptionResponse("Validation failed", validationErrors), HttpStatus.BAD_REQUEST);
     }
+
+
 }

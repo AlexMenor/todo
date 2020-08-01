@@ -1,6 +1,7 @@
 package com.pantala.todo.users;
 
 import com.pantala.todo.exceptions.ConflictException;
+import com.pantala.todo.exceptions.NotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
