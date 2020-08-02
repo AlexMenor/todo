@@ -1,9 +1,11 @@
 package com.pantala.todo.users;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.pantala.todo.tasks.Task;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.util.Set;
 import java.util.UUID;
@@ -15,10 +17,11 @@ public class User {
     private UUID id;
 
     @Column(unique=true)
-    @NotBlank
+    @Email
     private String email;
 
     @NotBlank
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @JsonIgnore
@@ -50,7 +53,7 @@ public class User {
         return password;
     }
 
-    public void setUsername(String email) {
+    public void setEmail(String email) {
         this.email = email;
     }
 
