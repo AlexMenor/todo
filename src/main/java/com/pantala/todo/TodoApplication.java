@@ -1,6 +1,7 @@
 package com.pantala.todo;
 
 import com.pantala.todo.auth.AuthFilter;
+import com.pantala.todo.auth.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InjectionPoint;
@@ -22,11 +23,11 @@ public class TodoApplication {
 	}
 
 	@Bean
-	public FilterRegistrationBean authFilterRegistration() {
+	public FilterRegistrationBean authFilterRegistration(JwtService jwtService, Logger logger) {
 
 		FilterRegistrationBean registration = new FilterRegistrationBean();
-		registration.setFilter(new AuthFilter());
-		registration.addUrlPatterns("/*");
+		registration.setFilter(new AuthFilter(logger, jwtService));
+		registration.addUrlPatterns("/tasks");
 		registration.setOrder(1);
 		return registration;
 	}

@@ -34,6 +34,14 @@ public class UsersService {
            throw new UserConflictException(user.getEmail());
         }
     }
+
+    public User getOne(String id) throws UserNotFoundException {
+        Optional<User> userOptional = repository.findById(UUID.fromString(id));
+        if (!userOptional.isPresent())
+            throw new UserNotFoundException();
+
+        return userOptional.get();
+    }
 }
 
 class UserConflictException extends ConflictException{
